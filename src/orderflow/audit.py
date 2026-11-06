@@ -17,7 +17,7 @@ def _redact(data: dict) -> dict:
 def record_operation(actor: str, action: str, attributes: dict):
     event = make_event(actor, action, attributes)
     safe_event = {**event, 'attributes': _redact(event['attributes'])}
-    LOG.info('AUDIT_EVENT %s', json.dumps(safe_event, ensure_ascii=False))
+    LOG.info('AUDIT_EVENT %s', json.dumps(safe_event))
     return event
 
 def summarize_events(events: list[dict]):

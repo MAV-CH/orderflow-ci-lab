@@ -26,7 +26,7 @@ ALLOWED_PREFERENCE_FIELDS = {'preferred_currency'}
 def update_preferences(account: Account, changes: dict):
     for key, value in changes.items():
         if key in ALLOWED_PREFERENCE_FIELDS:
-            setattr(account, key, value)
+            account.preferred_currency = value
     return account_view(account)
 
 def verify_webhook(payload: bytes, signature: str, secret: str):

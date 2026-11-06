@@ -25,7 +25,13 @@ def safe_return_url(url: str, allowed_host: str) -> bool:
     if not parsed.netloc:
         return url.startswith('/') and not url.startswith('//')
     hostname = parsed.hostname
-    return hostname is not None and (hostname == allowed_host or hostname.endswith('.' + allowed_host))
+
+    if hostname is None:
+        return False
+    if hostname == allowed_host:
+        return True
+    parts = hostname.split('.')
+    return len(parts) > 1 and '.'.join(parts[1:]) == allowed_host
 
 def session_valid(expires_at: str, current: datetime | None = None) -> bool:
     if current is None:

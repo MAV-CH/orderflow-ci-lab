@@ -7,9 +7,7 @@ LOG = logging.getLogger('orderflow.notifications')
 def webhook_destination_allowed(destination: str, approved_domains: set[str]) -> bool:
     parsed = urlparse(destination)
     hostname = parsed.hostname or ''
-    return parsed.scheme == 'https' and any(
-        hostname == domain or hostname.endswith('.' + domain) for domain in approved_domains
-    )
+    return parsed.scheme == 'https' and any(hostname == d or hostname.split('.')[-len(d.split('.')):] == d.split('.') for d in approved_domains)
 
 def prepare_email(recipient: str, subject: str, parameters: dict) -> dict:
     if '@' not in recipient:
