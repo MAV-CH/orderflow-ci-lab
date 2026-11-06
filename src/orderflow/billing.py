@@ -28,7 +28,9 @@ def distribute_refund(total: int, paid_lines: list[dict]) -> dict[str, int]:
             for line in paid_lines}
 
 def accept_payment_callback(payment: Payment, configured_currency: str,
-                            known_order_ids: set[int]) -> bool:
+                            known_order_ids: set[int], signature_valid: bool) -> bool:
+    if not signature_valid:
+        return False
     if payment.order_id not in known_order_ids:
         return False
     if payment.status != 'captured':

@@ -13,7 +13,7 @@ class Principal:
 def can_view_order(principal: Principal, record: dict) -> bool:
     if not principal.active:
         return False
-    if principal.role == 'admin':
+    if principal.role == 'admin' and principal.tenant_id == record.get('tenant_id'):
         return True
     return record.get('owner_id') == principal.user_id
 
@@ -24,7 +24,8 @@ def safe_return_url(url: str, allowed_host: str) -> bool:
     parsed = urlparse(url)
     if not parsed.netloc:
         return url.startswith('/') and not url.startswith('//')
-    return parsed.hostname is not None and parsed.hostname.endswith(allowed_host)
+    hostname = parsed.hostname
+    return hostname is not None and (hostname == allowed_host or hostname.endswith('.' + allowed_host))
 
 def session_valid(expires_at: str, current: datetime | None = None) -> bool:
     if current is None:
